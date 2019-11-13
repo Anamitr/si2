@@ -271,7 +271,7 @@ class FuzzyInputVariable_List_Trapezoids:
         colors = ['#ff0000','#ff0000','#ff0000']
         ls = ['solid','dashed','dotted']
         for i in range(0, self.n_functions):
-            plt.plot(x, y[:, i], label=f"{self.name}: {self.labels[i]}", color=colors[i], linestyle=ls[i])
+            plt.plot(x, y[:, i], label=f"{self.name}: {self.labels[0]}", color=colors[0], linestyle=ls[0])
         
         plt.title(f"Zmienna lingwistyczna {self.name}")
         

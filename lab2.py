@@ -52,7 +52,7 @@ plt.show()
 
 ###
 
-operators = [einstein]
+operators = [zadeh, algebraic, lukasiewicz, fodor, drastic]
 
 for operator in operators:
     for i in range(1, 4):
