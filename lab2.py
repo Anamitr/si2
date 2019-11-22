@@ -3,12 +3,14 @@ from operators import *
 import numpy as np
 # from helps_and_enhancers import *
 import matplotlib.pyplot as plt
+import matplotlib
 from ANFIS import ANFIS
 import time
 import copy
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
+# matplotlib.use('Qt5Agg')
 ###
 
 x = np.arange(0, 3.1, 0.1)
@@ -52,16 +54,17 @@ plt.show()
 
 ###
 
-operators = [zadeh, algebraic, lukasiewicz, fodor, drastic]
+# operators = [zadeh, algebraic, lukasiewicz, fodor, drastic]
+operators = [t_norm]
 
 for operator in operators:
-    for i in range(1, 4):
+    for i in range(1, 2):
         X_train, X_test, y_train, y_test = train_test_split(dataXY, data_labels, test_size=0.2, random_state=25)
 
-        fis = ANFIS([varX, varY], X_train.T, y_train, operator_function=operator)
+        fis = ANFIS([varX, varY], X_train.T, y_train, operator_function=operator, operator_init_value=0.5)
 
         start = time.time()
-        fis.train(True, True, False, True, n_iter=100)
+        fis.train(True, True, True, True, n_iter=100)
         end = time.time()
         print("FIS premises", fis.premises)
         print("TIME elapsed: ", time.strftime('%H:%M:%S', time.gmtime(end - start)))

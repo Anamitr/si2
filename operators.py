@@ -2,6 +2,13 @@ import numpy as np
 from t_norms import *
 
 
+def t_norm(args, op):
+    op = np.array(op)
+    min_val = np.min(args, axis=0)
+    max_val = np.max(args, axis=0)
+    return op * min_val + (1-op) * max_val
+
+
 def productN(args, op):
     # print("args[0]:", args[0])
     # print("args[1]:", args[1])
