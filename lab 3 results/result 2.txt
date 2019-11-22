@@ -1,0 +1,8 @@
+basinhopping step 100: f 7.25484 trial_f 7.5163 accepted 0  lowest_f 6.03769
+Optymalizacja zakończona!
+z blędem:   6.037688946472986
+Liczba ew:  392707
+Liczba it:  100
+FIS premises [[1.49992259 1.00006    0.99969394 0.9998655 ]
+ [1.49993055 1.00003134 0.9998336  0.99998172]]
+TIME elapsed:  00:03:37

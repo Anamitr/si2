@@ -20,7 +20,7 @@ from goal_function_object import *
 class ANFIS:
 
     def __init__(self, inputs, training_data: np.ndarray, expected_labels: np.ndarray, operator_function=productN,
-                 operator_init_value=0.5):
+                 operator_init_value=0.5, op=None):
         self.input_list = inputs
         self.input_number = len(inputs)
         self.training_data = training_data
@@ -37,7 +37,8 @@ class ANFIS:
         # self.tsk = np.ones((self.nodes_number ,self.input_number+1))
         self.tsk = np.random.random((self.nodes_number, self.input_number + 1))
 
-        self.op = [operator_init_value] * self.nodes_number
+        if op is None:
+            self.op = [operator_init_value] * self.nodes_number
 
         self.calculate_aids()
 
@@ -84,7 +85,7 @@ class ANFIS:
 
         R = self.operator_function(arguments, op)
 
-        # Normalizacja normalizacja poziomów aktywacji reguł
+        # Normalizacja poziomów aktywacji reguł
         Rsum = np.sum(R, axis=1, keepdims=True)
 
         Rnorm = R / Rsum
@@ -133,7 +134,7 @@ class ANFIS:
             bfv = [(0, 4)] * len(x1)
         else:
             bfv = bounds_premises
-        bop = [(0.0, 2.0)] * len(x2)
+        bop = [(0.0, 1.0)] * len(x2)
         btsk = [(0, 2)] * len(x3)
 
         niter_success = 100
@@ -148,7 +149,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds, "args": (self)}
                 res = basinhopping(goal_premises_operators_consequents, x0, minimizer_kwargs=minimizer_kwargs,
-                                   niter=n_iter, niter_success=niter_success)
+                                   niter=n_iter, niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_premises_operators_consequents, x0, method='SLSQP', bounds=bounds, args=self)
 
@@ -166,7 +167,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds}
                 res = basinhopping(goal_premises_operators, x0, minimizer_kwargs=minimizer_kwargs, niter=n_iter,
-                                   niter_success=niter_success)
+                                   niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_premises_operators, x0, method='SLSQP', bounds=bounds, args=self)
 
@@ -183,7 +184,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds, "args": (self)}
                 res = basinhopping(goal_premises_consequents, x0, minimizer_kwargs=minimizer_kwargs,
-                                   niter=n_iter)  # , niter_success=niter_success)
+                                   niter=n_iter, disp=True)  # , niter_success=niter_success)
             else:
                 res = minimize(goal_premises_consequents, x0, method='SLSQP', bounds=bounds, args=self, tol=1e-6)
 
@@ -201,7 +202,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds}
                 res = basinhopping(goal_operators_consequents, x0, minimizer_kwargs=minimizer_kwargs, niter=n_iter,
-                                   niter_success=niter_success)
+                                   niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_operators_consequents, x0, method='SLSQP', bounds=bounds, args=self)
 
@@ -218,7 +219,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds}
                 res = basinhopping(goal_premises, x0, minimizer_kwargs=minimizer_kwargs, niter=n_iter,
-                                   niter_success=niter_success)
+                                   niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_premises, x0, method='SLSQP', bounds=bounds, args=self)
 
@@ -234,7 +235,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds}
                 res = basinhopping(goal_operators, x0, minimizer_kwargs=minimizer_kwargs, niter=n_iter,
-                                   niter_success=niter_success)
+                                   niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_operators, x0, method='SLSQP', bounds=bounds, args=self)
 
@@ -250,7 +251,7 @@ class ANFIS:
             if global_optimization:
                 minimizer_kwargs = {"method": "SLSQP", "bounds": bounds, "args": (self), "tol": 1e-03}
                 res = basinhopping(goal_consequents, x0, minimizer_kwargs=minimizer_kwargs, niter=n_iter,
-                                   niter_success=niter_success)
+                                   niter_success=niter_success, disp=True)
             else:
                 res = minimize(goal_consequents, x0, method='SLSQP', bounds=bounds, args=self)
 
