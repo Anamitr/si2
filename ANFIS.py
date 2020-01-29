@@ -118,6 +118,40 @@ class ANFIS:
         if save_name is not None:
             fig.savefig(save_name)
 
+    def show_results_in_4d(self, save_name: str = None):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        result = self.anfis_estimate_labels(self.premises, self.op, self.tsk)
+
+        ax.scatter(self.training_data[0], self.training_data[1], self.training_data[2], c=result.flatten(), cmap=plt.hot())
+
+        plt.show()
+
+    def show_abs_error_results(self, expected_results):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        result = self.anfis_estimate_labels(self.premises, self.op, self.tsk)
+        error_result = np.abs(expected_results - result)
+
+        img = ax.scatter(self.training_data[0], self.training_data[1], self.training_data[2], c=error_result.flatten(),
+                   cmap=plt.hot())
+        fig.colorbar(img)
+        plt.show()
+
+    def show_relative_error_results(self, expected_results):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+
+        result = self.anfis_estimate_labels(self.premises, self.op, self.tsk)
+        error_result = np.abs(expected_results - result) / expected_results
+
+        img = ax.scatter(self.training_data[0], self.training_data[1], self.training_data[2], c=error_result.flatten(),
+                         cmap=plt.hot())
+        fig.colorbar(img)
+        plt.show()
+
     def set_training_and_testing_data(self, training_data, expected_labels):
         self.training_data = training_data
         self.expected_labels = expected_labels
