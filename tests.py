@@ -1,6 +1,6 @@
 from random import randrange
 
-from Util import int_to_binary_string
+from genetic_util import int_to_binary_string
 
 
 def crossover_test():

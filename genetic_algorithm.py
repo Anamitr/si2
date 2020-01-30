@@ -15,19 +15,14 @@ import random
 from random import randrange
 import math
 
-from Util import int_to_binary_string
-from Util import binary_string_to_int
+from genetic_util import int_to_binary_string, generate_population, fun1
+from genetic_util import binary_string_to_int
 
 
-def generate_population():
-    x = []
-    [x.append(randrange(100)) for i in range(0, 20)]
-    return x
-    # return [134, 118, 95, 60]
-
-
-def fun1(x: int):
-    return 10 * x ^ 2 + 2 * x + 4
+def turn_around_for_minimizing(y):
+    y_max = max(y)
+    minimized_y = [y_max - item for item in y]
+    return minimized_y
 
 
 def roulette_linear(x: list, y: list):
@@ -48,7 +43,7 @@ def roulette_linear(x: list, y: list):
         roulette_sum = 0
         for j in range(0, len(y)):
             roulette_sum = roulette_sum + y[j]
-            if roulette_sum > drawn_number:
+            if roulette_sum >= drawn_number:
                 drawn_specimens.append(x[j])
                 break
 
@@ -183,12 +178,16 @@ print("Initial fitness:\n", y)
 #     y = [FITNESS_FUNCTION(item) for item in x]
 #     print("Fitness in generation num ", i, ":\n", y)
 
+
 def run_genetic_algorithm(population: list, fitness_function, num_of_generations, roulette_function, cross_probability,
-                          num_of_points_to_cross, mutation_probabilty, num_of_mutation_places, genotype_size):
+                          num_of_points_to_cross, mutation_probabilty, num_of_mutation_places, genotype_size,
+                          minimizing=True):
     x = population
     print("Initial population:\n", x)
 
     y = [fitness_function(item) for item in x]
+    if minimizing:
+        y = turn_around_for_minimizing(y)
     print("Initial fitness:\n", y)
     for i in range(0, num_of_generations):
         drawn_specimens = roulette_function(x, y)
@@ -197,11 +196,13 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
         # print("Population after crossover: ", crossed_population)
 
         mutated_population = mutate(crossed_population, mutation_probabilty, num_of_mutation_places, genotype_size)
-        # print("Population after mutation: ", mutated_population)
+        print("Population after mutation: ", mutated_population)
 
         x = mutated_population
 
         y = [fitness_function(item) for item in x]
+        if minimizing:
+            y = turn_around_for_minimizing(y)
         print("Fitness in generation num ", i, ":\n", y)
 
     return x, y
