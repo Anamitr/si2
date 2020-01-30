@@ -63,8 +63,8 @@ def roulette_logarithmic(x: list, y: list):
 
 def crossover(x: list, cross_prob: float, num_of_points_to_cross: int, word_length: int):
     num_of_potential_crossovers = int(len(x) / 2)
-    x_string = [int_to_binary_string(item, word_length) for item in x]
-    # word_length = len(x_string[0])
+    # x_string = [int_to_binary_string(item, word_length) for item in x]
+    x_string = x
     new_population = []
 
     for i in range(0, num_of_potential_crossovers):
@@ -77,11 +77,10 @@ def crossover(x: list, cross_prob: float, num_of_points_to_cross: int, word_leng
                 while point in positions:
                     point = randrange(word_length)
                 positions.append(point)
-            # positions = [randrange(word_length) for i in range(0, num_of_points_to_cross)]
             positions.sort()
             # print("Positions: ", positions)
-            nx1 = ""
-            nx2 = ""
+            nx1 = []
+            nx2 = []
             odd_flag = True
             if len(positions) == 1:
                 nx1 = x2[:positions[0]] + x1[positions[0]:]
@@ -117,14 +116,15 @@ def crossover(x: list, cross_prob: float, num_of_points_to_cross: int, word_leng
                             odd_flag = True
             # print("Before crossing: ", x1, ", ", x2)
             # print("After crossing: ", nx1, ", ", nx2)
-            new_population.extend([binary_string_to_int(nx1), binary_string_to_int(nx2)])
+            new_population.extend([nx1, nx2])
         else:
             new_population.extend([x[i * 2], x[i * 2 + 1]])
     return new_population
 
 
 def mutate(population, mutation_probability, num_of_mutation_places, word_length):
-    x_string = [int_to_binary_string(item, word_length) for item in population]
+    # x_string = [int_to_binary_string(item, word_length) for item in population]
+    x_string = population
     new_population = []
     # print("Before mutations: ", x_string)
     for item in x_string:
@@ -136,11 +136,8 @@ def mutate(population, mutation_probability, num_of_mutation_places, word_length
                 while place in mutation_places:
                     place = randrange(len(item))
                 # print("Mutation place: ", place)
-                if item[place] == '0':
-                    item = item[:place] + '1' + item[place + 1:]
-                else:
-                    item = item[:place] + '0' + item[place + 1:]
-        new_population.append(binary_string_to_int(item))
+                item[place] = round(random.uniform(0.0, 1.0), 2)
+        new_population.append(item)
     # print("After mutations: ", new_population)
     return new_population
 
@@ -157,11 +154,12 @@ SELECTION_METHOD = None
 
 LOGARITHM_BASE = 10
 
-x = generate_population()
-print("Initial population:\n", x)
 
-y = [FITNESS_FUNCTION(item) for item in x]
-print("Initial fitness:\n", y)
+# x = generate_population()
+# print("Initial population:\n", x)
+#
+# y = [FITNESS_FUNCTION(item) for item in x]
+# print("Initial fitness:\n", y)
 
 
 # for i in range(0, NUM_OF_GENERATIONS):
@@ -185,10 +183,11 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
     x = population
     print("Initial population:\n", x)
 
-    y = [fitness_function(item) for item in x]
+    y = [round(fitness_function(item), 4) for item in x]
     if minimizing:
         y = turn_around_for_minimizing(y)
     print("Initial fitness:\n", y)
+    global_max = max(y)
     for i in range(0, num_of_generations):
         drawn_specimens = roulette_function(x, y)
 
@@ -200,9 +199,15 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
 
         x = mutated_population
 
-        y = [fitness_function(item) for item in x]
+        y = [round(fitness_function(item), 4) for item in x]
         if minimizing:
             y = turn_around_for_minimizing(y)
         print("Fitness in generation num ", i, ":\n", y)
+        y_max = max(y)
+        print("Generation", i, "best =", y_max)
+        if y_max > global_max:
+            global_max = y_max
+
+    print("Global best = ", y_max)
 
     return x, y
