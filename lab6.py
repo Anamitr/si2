@@ -99,14 +99,18 @@ def run_particle_swarm_algorithm(population, fitness_function, num_of_moves, p1,
     return x_best, y_best, global_best_x, global_best_y
 
 
-P1 = 0.5    # waga dotychczasowej predkosci
-P2 = 2      # jak czasteczka ufa samej sobie
-P3 = 2      # jak ufa calemu rojowi
+P1 = 0.5  # waga dotychczasowej predkosci
+P2 = 2  # jak czasteczka ufa samej sobie
+P3 = 2  # jak ufa calemu rojowi
 NUM_OF_MOVES = 100
 
-x_best, y_best, global_best_x, global_best_y = run_particle_swarm_algorithm(genetic_util.generate_population2(),
-                                                                            genetic_util.fun2, NUM_OF_MOVES, P1, P2, P3,
-                                                                            is_bigger)
+# x_best, y_best, global_best_x, global_best_y = run_particle_swarm_algorithm(genetic_util.generate_population2(),
+#                                                                             genetic_util.fun2, NUM_OF_MOVES, P1, P2, P3,
+#                                                                             is_bigger)
 
+x_best, y_best, global_best_x, global_best_y = run_particle_swarm_algorithm(
+    genetic_util.generate_initial_population_for_anfis(1000),
+    genetic_util.anfis_fitness_function, NUM_OF_MOVES, P1, P2, P3,
+    is_lesser)
 
 pass

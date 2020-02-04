@@ -19,7 +19,7 @@ def run_anfis(var_list: list, data, labels):
 
     fis = ANFIS(var_list, X_train.T, y_train)
 
-    fis.train(False, True, True, True, n_iter=50)
+    fis.train(False, True, True, True, n_iter=200)
 
     fis.show_results_in_4d()
     fis.show_abs_error_results(y_train)
@@ -41,7 +41,7 @@ output = (dataX ** 0.5 + dataY ** (-1) + dataZ ** 1.5) ** 2
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(dataX, dataY, dataZ, c=output, cmap=plt.hot())
-
+fig.canvas.set_window_title('data')
 plt.show()
 
 pass
@@ -51,13 +51,13 @@ pass
 # varZ = FuzzyInputVariable_2Trapezoids(0.5, 0.5, "ZAxis", ["L", "H"])
 #
 # varX.show()
-# run_anfis([varX, varY, varZ], dataXYZ, output)
 
 varX = FuzzyInputVariable_2Sigmoids("XAxis", ["L", "H"], 0.5, 0.5)
 varY = FuzzyInputVariable_2Sigmoids("XAxis", ["L", "H"], 0.5, 0.5)
 varZ = FuzzyInputVariable_2Sigmoids("XAxis", ["L", "H"], 0.5, 0.5)
 
 varX.show()
+
 run_anfis([varX, varY, varZ], dataXYZ, output)
 
 # varY.show()

@@ -15,6 +15,7 @@ import random
 from random import randrange
 import math
 
+import genetic_util
 from genetic_util import int_to_binary_string, generate_population, fun1
 from genetic_util import binary_string_to_int
 
@@ -61,11 +62,12 @@ def roulette_logarithmic(x: list, y: list):
     return roulette_linear(x, y_logarithmic)
 
 
-def crossover(x: list, cross_prob: float, num_of_points_to_cross: int, word_length: int):
+def crossover(x: list, cross_prob: float, num_of_points_to_cross: int):
     num_of_potential_crossovers = int(len(x) / 2)
     # x_string = [int_to_binary_string(item, word_length) for item in x]
     x_string = x
     new_population = []
+    word_length = len(x_string)
 
     for i in range(0, num_of_potential_crossovers):
         positions = []
@@ -122,7 +124,7 @@ def crossover(x: list, cross_prob: float, num_of_points_to_cross: int, word_leng
     return new_population
 
 
-def mutate(population, mutation_probability, num_of_mutation_places, word_length):
+def mutate(population, mutation_probability, num_of_mutation_places):
     # x_string = [int_to_binary_string(item, word_length) for item in population]
     x_string = population
     new_population = []
@@ -178,7 +180,7 @@ LOGARITHM_BASE = 10
 
 
 def run_genetic_algorithm(population: list, fitness_function, num_of_generations, roulette_function, cross_probability,
-                          num_of_points_to_cross, mutation_probabilty, num_of_mutation_places, genotype_size,
+                          num_of_points_to_cross, mutation_probabilty, num_of_mutation_places,
                           minimizing=True):
     x = population
     print("Initial population:\n", x)
@@ -193,10 +195,10 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
             y = turn_around_for_minimizing(y)
         drawn_specimens = roulette_function(x, y)
 
-        crossed_population = crossover(drawn_specimens, cross_probability, num_of_points_to_cross, genotype_size)
+        crossed_population = crossover(drawn_specimens, cross_probability, num_of_points_to_cross)
         # print("Population after crossover: ", crossed_population)
 
-        mutated_population = mutate(crossed_population, mutation_probabilty, num_of_mutation_places, genotype_size)
+        mutated_population = mutate(crossed_population, mutation_probabilty, num_of_mutation_places)
         print("Population after mutation: ", mutated_population)
 
         x = mutated_population
@@ -215,3 +217,14 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
     print("Global best = ", y_max)
 
     return x, y
+
+
+# x, y = run_genetic_algorithm(genetic_util.generate_initial_population_for_anfis(1000),
+#                              genetic_util.anfis_fitness_function, 10,
+#                              roulette_square,
+#                              0.8,
+#                              2, 0.1, 2, minimizing=True)
+# print("x = ", x, "y = ", y)
+# print("max: x = ", x[y.index(min(y))], ", y = ", min(y))
+#
+# genetic_util.show_results_for_gives_x(x[y.index(max(y))])
