@@ -184,11 +184,13 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
     print("Initial population:\n", x)
 
     y = [round(fitness_function(item), 4) for item in x]
-    if minimizing:
-        y = turn_around_for_minimizing(y)
+
     print("Initial fitness:\n", y)
-    global_max = max(y)
+    global_max_y = max(y)
+    global_max_x = x[y.index(max(y))]
     for i in range(0, num_of_generations):
+        if minimizing:
+            y = turn_around_for_minimizing(y)
         drawn_specimens = roulette_function(x, y)
 
         crossed_population = crossover(drawn_specimens, cross_probability, num_of_points_to_cross, genotype_size)
@@ -200,13 +202,15 @@ def run_genetic_algorithm(population: list, fitness_function, num_of_generations
         x = mutated_population
 
         y = [round(fitness_function(item), 4) for item in x]
-        if minimizing:
-            y = turn_around_for_minimizing(y)
         print("Fitness in generation num ", i, ":\n", y)
-        y_max = max(y)
+        if minimizing:
+            y_max = min(y)
+        else:
+            y_max = max(y)
         print("Generation", i, "best =", y_max)
-        if y_max > global_max:
-            global_max = y_max
+        if y_max < global_max_y:
+            global_max_y = y_max
+            global_max_x = x[y.index(y_max)]
 
     print("Global best = ", y_max)
 
